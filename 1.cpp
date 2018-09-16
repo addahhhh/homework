@@ -2,7 +2,6 @@
 #include<QDebug>
 #include<QList>
 
-typedef quint64 lword;
 typedef quint32 word;
 typedef quint8 byte;
 
@@ -10,8 +9,8 @@ typedef quint8 byte;
 
 #define word_llo(x) ((byte)((word)(x)&255))//次低八位
 #define word_hlo(x) ((byte)(((word)(x)>>8)&255))//次高八位
-#define word_lhi(x) ((byte)((word)((lword)(x)>>16)&255))//高低八位
-#define word_hhi(x) ((byte)((word)((lword)(x)>>24)))//高高八位
+#define word_lhi(x) ((byte)((word)((word)(x)>>16)&255))//高低八位
+#define word_hhi(x) ((byte)((word)((word)(x)>>24)))//高高八位
 
 #define max(x,y) (((x)>(y))?(x):(y))//求最大值
 #define min(x,y) (((x)<(y))?(x):(y))//求最小值

@@ -36,5 +36,6 @@ int main(int argc, char *argv[])
     qDebug()<<"排序前:"<<values;
     std::sort(values.begin(),values.end(),std::greater<qint8>());//从大到小进行排序
     qDebug()<<"排序后:"<<values;
+    return 0;
 }
 

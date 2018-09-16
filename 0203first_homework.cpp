@@ -27,7 +27,7 @@ int main(int argc, char *argv[])
     values.append(word_llo(i));
     //计算重组后的值
     int newi;
-        newi=(values.at(3)<<24)+(values.at(0)<<16)+(values.at(1)<<8)+values.at(2);
+        newi=(values.at(1)<<24)+(values.at(0)<<16)+(values.at(3)<<8)+values.at(2);
     qDebug("原始值:0x%x==%d\n次低八位:0x%x==%d\n次高八位:0x%x==%d\n高低八位:0x%x==%d\n高高八位:0x%x==%d\n",
            i,i,values.at(3),values.at(3),values.at(1),values.at(1),values.at(2),values.at(2),values.at(0),values.at(0));
     qDebug("高高八位与次高八位的最大值:0x%x(%d)\n高低八位与次低八位的最小值:0x%x(%d)",

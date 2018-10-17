@@ -50,7 +50,8 @@ typedef struct{
 QDebug operator<< (QDebug d, const studData &data) {
     int i;
     for(i=0;i<data.student.size();i++)
-        d<<data.student.at(i);
+        d.noquote()<<data.student.at(i);
+    qDebug()<<" ";
     return d;
 }
 
@@ -69,7 +70,7 @@ bool myCmp::operator()(const studData &d1, const studData &d2)
     quint32 sortedColumn = 0x00000001<<currentColumn;
     switch (sortedColumn) {
     case SK::col01:
-        result=d1.student.at(currentColumn)>d2.student.at(currentColumn);
+        result=d1.student.at(currentColumn+1)>d2.student.at(currentColumn+1);
         break;
     }
     return result;
@@ -84,7 +85,7 @@ public:
 private:
       QString sorter;
       QVector<studData> stu;
-      QByteArray line;
+      QStringList line;
 };
 
 // 请补全
@@ -98,22 +99,29 @@ void ScoreSorter::readFile(){
         qDebug()<<QString("文件打开失败");
         return;
     }
+    studData brief;
+    QString string(file.readLine());
+    line=string.split(" ",QString::SkipEmptyParts);
     while(!file.atEnd()){
-        studData brief;
-        QString string(line);
-        this->line=file.readLine();
-        string.remove("\n");
-        brief.student=string.split(" ",QString::SkipEmptyParts);
+        QString st(file.readLine());
+        brief.student=st.split(" ",QString::SkipEmptyParts);
+        if(brief.student.last()=="\n")
+            brief.student.removeLast();
+        if(brief.student.size()==0)
+            continue;
         stu.append(brief);
     }
     file.close();
 }
 
 void ScoreSorter::doSort(){
-    myCmp cmp(m);
+    myCmp cmp(m-2);
     qDebug()<<"排序后输出，当前排序第"<<m<<"列";
     std::sort(stu.begin(),stu.end(),cmp);
-    qDebug()<<stu;
+    line.removeLast();
+    qDebug().nospace().noquote()<<line;
+    for(int j=0;j<stu.size();j++)
+        qDebug()<<stu.at(j);
     qDebug()<<"-----------------------------------"<<endl;
 }
 
@@ -126,7 +134,7 @@ void ScoreSorter::doSort(){
 int main()
 {
     //qInstallMessageHandler(myMessageOutput);
-    QString datafile = "data.txt";
+    QString datafile = "E:/Dev/Qt/5.9.6/qtCreator/bin/zjl/data.txt";
 
     // 如果排序后文件已存在，则删除之
     QFile f("sorted_"+datafile);

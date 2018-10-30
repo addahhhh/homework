@@ -124,7 +124,7 @@ void DrawWidget::setDrawnText(QString text)
 void DrawWidget::photo()
 {
     QString open;
-    open=QFileDialog::getOpenFileName(this,tr("选择图片"),".",tr("image files(*.jpg)"));
+    open=QFileDialog::getOpenFileName(this,tr("选择图片"),".",tr("image files(*.png)"));
     if(open.isEmpty())
     {
         QMessageBox q;
@@ -136,7 +136,7 @@ void DrawWidget::photo()
     newp->fill(BACKGROUND_COLOR);
     QPainter a(newp);
     a.drawPixmap(QPoint((width()-pix->width())/2,(height()-pix->width())/2),*pix);
-    delete a;
+    delete pix;
     pix=newp;
     update();
 }

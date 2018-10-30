@@ -33,7 +33,7 @@ void CenterFrame::createUserCommandArea()
     // 准备绘制按钮图标
     QPixmap p(btnWidth-2, btnHeight-2);
     QPainter painter(&p);
-    QPen pen(BACKGROUND_COLOR);
+    QPen pen(FOREGROUND_COLOR);
     pen.setWidthF(2);
     pen.setStyle(Qt::DotLine);
     painter.setRenderHint(QPainter::Antialiasing);
@@ -104,11 +104,11 @@ void CenterFrame::createUserCommandArea()
     btnPhoto->setCheckable(true);
     btnPhoto->setIconSize(p.size());
     p.fill(BACKGROUND_COLOR);
-    QImage photo(":/hm.jpg");
+    QImage photo(":/new/prefix1/1.png");
     QRect pho(0,0,p.size().width(),p.size().height());
     QRect ph=photo.rect();
     painter.drawImage(pho,photo,ph);
-    btnRect->setIcon (QIcon(p));
+    btnPhoto->setIcon (QIcon(p));
     connect(btnPhoto,&QPushButton::clicked,this,&CenterFrame::on_btnPhotoClicked);
 
     // 文本按钮
@@ -197,6 +197,7 @@ void CenterFrame::updateButtonStatus()
     btnDiamond->setChecked(false);
     btnEllipse->setChecked(false);
     btnText->setChecked(false);
+    btnPhoto->setChecked(false);
     edtText->setVisible(false);
     // 然后根据设置的绘图类型重新切换按键状态
     switch (drawWidget->shapeType()) {
@@ -220,6 +221,8 @@ void CenterFrame::updateButtonStatus()
         edtText->setVisible(true);      // 使编辑框可见
         edtText->setFocus();            // 编辑框获得输入焦点
         break;
+    case ST::Photo:
+        btnPhoto->setChecked(true);
     default:
         break;
     }
@@ -308,4 +311,16 @@ void CenterFrame::on_btnTextClicked()
 void CenterFrame::on_edtTextEdited(const QString &text)
 {
     drawWidget->setDrawnText(text);
+}
+
+void CenterFrame::on_btnPhotoClicked()
+{
+    if(btnPhoto->isChecked()){
+        drawWidget->setShapeType(ST::Photo);
+        drawWidget->photo();
+        updateButtonStatus();
+    }
+    else{
+        drawWidget->setShapeType(ST::None);
+    }
 }

@@ -16,10 +16,14 @@
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
 {
+    centerFrame = new CenterFrame;   //新建CenterFrame对象
+    setCentralWidget (centerFrame);  //新建的centerFrame->insideWidget()对象作为主窗口的中央窗口
     createToolBar ();                //创建一个工具栏
     setMinimumSize (600, 400);       //设置主窗体的最小尺寸
     setWindowTitle(tr("实验二 - 窗口、控件及基本绘图实验 "));
     penStyleChangged(styleComboBox->currentData().toInt());      //初始化线型，设置控件中当前值作为初始值
+    centerFrame->setPenWidth (widthSpinBox->value ());          //设置初始线宽
+    centerFrame->setPenColor (FOREGROUND_COLOR);                 //设置初始颜色
 
 }
 
@@ -32,7 +36,7 @@ void MainWindow::createToolBar(){
     // 线型选择下拉框
     styleLabel = new QLabel(tr("线型"));
     styleComboBox = new QComboBox;//下拉框列表
-    styleComboBox->setToolTip(tr('选择画笔线形'));//提示字符
+    styleComboBox->setToolTip(tr("选择画笔线形"));//提示字符
     // 此处在下拉框的每个Item里，设置了一个item的userData，该用户数据作为用户选择的标志
     styleComboBox->addItem (tr("实线(SolidLine)"), static_cast<int>(Qt::SolidLine));
     styleComboBox->addItem (tr("虚线(DashLine)"), static_cast<int>(Qt::DashLine));
@@ -43,10 +47,10 @@ void MainWindow::createToolBar(){
     styleComboBox->setCurrentIndex(1);
     //线宽选择框
     widthLabel = new QLabel(tr("线宽"));
-    widthSpinBox->setToolTip(tr('选择线宽'));
     widthSpinBox = new QSpinBox;
+    widthSpinBox->setToolTip(tr("选择线宽"));
     widthSpinBox->setRange(1,50);
-    connect(widthSpinBox,static_cast<void(QSpinBox::*)(int)>(&QSpinBox::valueChanged),CenterFrame,&CenterFrame::setPenWidth);
+    connect(widthSpinBox,static_cast<void(QSpinBox::*)(int)>(&QSpinBox::valueChanged),centerFrame,&CenterFrame::setPenWidth);
     widthSpinBox->setValue(1);
     // 颜色选择框
     colorBtn = new QToolButton;
@@ -59,18 +63,19 @@ void MainWindow::createToolBar(){
     clearBtn = new QToolButton;
     clearBtn->setText (tr("清除"));
     clearBtn->setToolTip(tr("清除当前画板"));
-    connect (clearBtn, &QToolButton::clicked, centerFrame, &CenterFrame::clearPaint);
+    connect (clearBtn, &QToolButton::clicked,centerFrame, &CenterFrame::clearPaint);
+    /*
     //图片选择
     photoBtn=new QToolButton;
     photoBtn->setText(tr("图片"));
     photoBtn->setToolTip(tr("选择图片"));
     pixmap.fill(BACKGROUND_COLOR);
     QPainter tra(&pixmap);
-    QImage photo(":/hm");
+    QImage photo("::/new/prefix1/1.png");
     QRect tar(0,0,10,10);
     QRect source=photo.rect();
     tra.drawImage(tar,photo,source);
-    photoBtn->setIcon(QIcon(pixmap));
+    photoBtn->setIcon(QIcon(pixmap));*/
     // 向工具栏上添加各个控件
     toolBar->addWidget (styleLabel);
     toolBar->addWidget (styleComboBox);
@@ -79,13 +84,13 @@ void MainWindow::createToolBar(){
     toolBar->addWidget (colorBtn);
     toolBar->addSeparator();//分隔符
     toolBar->addWidget (clearBtn);
-    toolBar->addWidget(photoBtn);
+    //toolBar->addWidget(photoBtn);
 }
 
 void MainWindow::penStyleChangged (int index)
 {
     Q_UNUSED(index)
-    CenterFrame->setPenStyle(styleComboBox->currentData().toInt ());
+    centerFrame->setPenStyle(styleComboBox->currentData().toInt ());
 }
 
 void MainWindow::penColorChangged ()
@@ -94,7 +99,7 @@ void MainWindow::penColorChangged ()
     //判断颜色是否有效
     if(color.isValid ())
     {
-        CenterFrame->setPenColor (color);
+        centerFrame->setPenColor (color);
         QPixmap p(20, 20);
         p.fill (color);
         colorBtn->setIcon (QIcon(p));

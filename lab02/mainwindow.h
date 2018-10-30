@@ -23,6 +23,7 @@ public slots:
     void penColorChangged();
 
 private:
+    CenterFrame *centerFrame;
     QLabel *styleLabel;//线形
     QComboBox *styleComboBox;//线形选择框
     QLabel *widthLabel;//线宽

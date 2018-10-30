@@ -36,4 +36,4 @@ HEADERS += \
     centerframe.h
 
 RESOURCES += \
-    1.qrc
+    sou.qrc

@@ -28,13 +28,14 @@ protected:
     void resizeEvent (QResizeEvent *);
     void drawShape(const QPointF ptStart,const QPointF ptEnd,const ST::ShapeType drawType);
     QRectF textRect(const QPointF ptStart, const QPointF ptEnd, QString displayText, QFontMetrics fm);//绘制文本时需要的矩形大小
-    void photo();
+
 signals:
 public slots:
     void setStyle(int);
     void setWidth(int);
     void setColor(QColor);
     void clear();
+    void photo();
 
 private :
     QPixmap *pix;
